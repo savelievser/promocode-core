@@ -1,0 +1,29 @@
+version: '3.4'
+
+services:
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - 27017:27017
+
+  redis:
+    image: redis
+    restart: always      
+    ports:
+      - 6379:6379
+
+  promocodeswebapp:
+    #image: ${DOCKER_REGISTRY}promocodeswebapp
+    build:
+      context: .
+      dockerfile: PromoCodesWebApp/Dockerfile
+    environment:
+      MongoDB__Host: mongo
+      Redis__Configuration: redis:6379
+    depends_on:
+      - mongo
+      - redis
